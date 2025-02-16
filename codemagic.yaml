@@ -10,9 +10,9 @@ workflows:
         XCODE_WORKSPACE: "CrovvnPlanner.xcworkspace" # <----
         XCODE_SCHEME: "CrovvnPlanner" # <----
         BUNDLE_ID: "com.crovvnplanner.app" # <----
-        APP_STORE_APP_ID: 6740518975 # <----
-        APP_STORE_CONNECT_KEY_ID: "2B5D6W3J76" # <----
-        APP_STORE_CONNECT_ISSUER_ID: "0fecb918-0ef9-44c0-a163-bd0f6f29e369" # <----
+        APP_STORE_APP_ID: 6742072863 # <----
+        APP_STORE_CONNECT_KEY_ID: "K855U32N4W" # <----
+        APP_STORE_CONNECT_ISSUER_ID: "74d1942f-88b3-472d-89ff-735677e603f5" # <----
         node: latest
         xcode: latest
         cocoapods: default
