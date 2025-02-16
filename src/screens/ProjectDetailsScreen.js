@@ -14,12 +14,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { ChevronDownIcon, ChevronLeftIcon, ChevronUpIcon } from 'react-native-heroicons/solid';
 
-const fontRobotoBold = 'Roboto-Bold';
-const fontRobotoReg = 'Roboto-Regular';
-const fontSfProTextRegular = 'SFProText-Regular';
+
 const fontInterRegular = 'Inter18pt-Regular';
 
-const ProjectDetailsScreen = ({ setSelectedScreen, selectedScreen, selectedPlace, selectedProject }) => {
+const ProjectDetailsScreen = ({ setSelectedScreen, selectedProject }) => {
     const [dimensions, setDimensions] = useState(Dimensions.get('window'));
     const [status, setStatus] = useState(selectedProject.status);
     const [isStatusVisible, setIsStatusVisible] = useState(false);

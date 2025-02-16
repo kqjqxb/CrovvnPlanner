@@ -5,7 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import DeviceInfo from 'react-native-device-info';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import HomeScreen from './src/screens/HomeScreen';
-import OnboardingScreen from './src/screens/OnboardingScreen';
+import LaunshingScreen from './src/screens/LaunshingScreen';
 import { NavigationContainer } from '@react-navigation/native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { UserProvider, UserContext } from './src/context/UserContext';
@@ -83,9 +83,9 @@ const AppNavigator = () => {
 
   return (
     <NavigationContainer>
-        <Stack.Navigator initialRouteName={isOnboardWasVisible ? 'OnboardingScreen' : 'Home'}>
+        <Stack.Navigator initialRouteName={'launshingScreen'}>
           <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
-          <Stack.Screen name="OnboardingScreen" component={OnboardingScreen} options={{ headerShown: false }} />
+          <Stack.Screen name="launshingScreen" component={LaunshingScreen} options={{ headerShown: false }} />
         </Stack.Navigator>
     </NavigationContainer>
   );

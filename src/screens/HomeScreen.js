@@ -17,8 +17,6 @@ import {
 
 import FocusingScreen from './FocusingScreen';
 import ProjectDetailsScreen from './ProjectDetailsScreen';
-import GoalsScreen from './GoalsScreen';
-import PicnicsScreen from './PicnicsScreen';
 import SettingsScreen from './SettingsScreen';
 
 import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon, ChevronUpIcon, XMarkIcon } from 'react-native-heroicons/solid';
@@ -63,20 +61,6 @@ const HomeScreen = () => {
   const [projects, setProjects] = useState([]);
   const [executorsVisibility, setExecutorsVisibility] = useState({});
   const [visibleExecutorsProjectId, setVisibleExecutorsProjectId] = useState(null);
-
-  useEffect(() => {
-    const fetchStorageFavourites = async () => {
-      try {
-        const saved = await AsyncStorage.getItem('favorites');
-        setFavorites(saved ? JSON.parse(saved) : []);
-      } catch (error) {
-        console.error('Error  favorites:', error);
-      }
-    };
-
-    fetchStorageFavourites();
-
-  }, [selectedScreen,]);
 
 
   const validateDateDeadlineChange = (text) => {
@@ -125,7 +109,7 @@ const HomeScreen = () => {
 
 
 
-  const handleStarPress = (complex) => {
+  const handleComplexityPress = (complex) => {
     setComplexity(complex);
   };
 
@@ -141,41 +125,40 @@ const HomeScreen = () => {
   };
 
 
-  const renderRightCheckListActions = (item) => (
+  const renderRightExecutorsActions = (item) => (
     <TouchableOpacity
-      onPress={() => removeChecklist(item)}
+      onPress={() => removeExecutor(item)}
       style={{
-        backgroundColor: 'transparent',
+        width: 68,
         justifyContent: 'center',
         alignItems: 'center',
-        width: 70,
+        backgroundColor: 'transparent',
         height: '100%',
       }}
     >
       <XMarkIcon size={dimensions.height * 0.05} color='#FFDE59' />
     </TouchableOpacity>
   );
-  const removeChecklist = async (checklistToRemove) => {
+  const removeExecutor = async (executorToRemove) => {
     try {
-      const updatedChecklists = executors.filter(list =>
-        !(list.id === checklistToRemove.id)
+      const updatedExecutors = executors.filter(execut =>
+        !(execut.id === executorToRemove.id)
       );
-      setExecutors(updatedChecklists);
+      setExecutors(updatedExecutors);
     } catch (error) {
-      console.error('Error removing checklist:', error);
-      Alert.alert('Error', 'Failed to remove checklist from checklists.');
+      Alert.alert('Error', 'Failed to remove executor.');
     }
   };
 
-  const renderRightProjectActions = (item) => (
+  const renderRightProjectActions = (proj) => (
     <TouchableOpacity
-      onPress={() => removeProject(item)}
+      onPress={() => removeProject(proj)}
       style={{
-        backgroundColor: 'transparent',
         justifyContent: 'center',
+        backgroundColor: 'transparent',
         alignItems: 'center',
-        width: 70,
         height: '100%',
+        width: 68,
       }}
     >
       <XMarkIcon size={dimensions.height * 0.05} color='#FFDE59' />
@@ -189,33 +172,32 @@ const HomeScreen = () => {
       await AsyncStorage.setItem('projects', JSON.stringify(updatedProjects));
       setProjects(updatedProjects);
     } catch (error) {
-      console.error('Error removing checklist:', error);
-      Alert.alert('Error', 'Failed to remove checklist from checklists.');
+      Alert.alert('Error', 'Failed to remove project from projects.');
     }
   };
 
 
 
-  const handleDotsPress = (id) => {
+  const handleYellowDotsPress = (id) => {
     swipeableRefs.current.forEach((ref, key) => {
       if (key !== id && ref) {
         ref.close();
       }
     });
 
-    const currentRef = swipeableRefs.current.get(id);
-    if (currentRef) {
+    const currentDotsRef = swipeableRefs.current.get(id);
+    if (currentDotsRef) {
       if (activeSwipeableId === id) {
-        currentRef.close();
+        currentDotsRef.close();
         setActiveSwipeableId(null);
       } else {
-        currentRef.openRight();
+        currentDotsRef.openRight();
         setActiveSwipeableId(id);
       }
     }
   };
 
-  const handleSwipeableOpen = (id) => {
+  const handleSwipeableToOpen = (id) => {
     swipeableRefs.current.forEach((ref, key) => {
       if (key !== id && ref) {
         ref.close();
@@ -269,7 +251,6 @@ const HomeScreen = () => {
       projects.push(project);
       await AsyncStorage.setItem('projects', JSON.stringify(projects));
       setProjects(projects);
-      // Clear the form after saving
       setTitle('');
       setDescription('');
       setDeadline('');
@@ -618,10 +599,6 @@ const HomeScreen = () => {
         <FocusingScreen setSelectedScreen={setSelectedScreen} selectedScreen={selectedScreen} />
       ) : selectedScreen === 'Analysis' ? (
         <AnalysisScreen setSelectedScreen={setSelectedScreen} selectedScreen={selectedScreen} />
-      ) : selectedScreen === 'Checklists' ? (
-        <FocusingScreen setSelectedScreen={setSelectedScreen} selectedScreen={selectedScreen} />
-      ) : selectedScreen === 'Goals' ? (
-        <GoalsScreen setSelectedScreen={setSelectedScreen} selectedScreen={selectedScreen} />
       ) : null}
 
       {selectedScreen !== 'ProjectDetails' && (
@@ -998,7 +975,7 @@ const HomeScreen = () => {
 
               <View style={{ flexDirection: 'row', justifyContent: 'space-around', width: dimensions.width * 0.93, marginTop: dimensions.height * 0.01, }}>
                 {[1, 2, 3, 4, 5].map((crovvn) => (
-                  <TouchableOpacity key={crovvn} onPress={() => handleStarPress(crovvn)}>
+                  <TouchableOpacity key={crovvn} onPress={() => handleComplexityPress(crovvn)}>
                     <Image
                       source={complexity >= crovvn
                         ? require('../assets/icons/crovvnIcon.png')
@@ -1043,8 +1020,8 @@ const HomeScreen = () => {
                           swipeableRefs.current.delete(executor.id);
                         }
                       }}
-                      renderRightActions={() => renderRightCheckListActions(executor)}
-                      onSwipeableOpen={() => handleSwipeableOpen(executor.id)}
+                      renderRightActions={() => renderRightExecutorsActions(executor)}
+                      onSwipeableOpen={() => handleSwipeableToOpen(executor.id)}
                       onSwipeableClose={() => handleSwipeableClose(executor.id)}
                     >
 
@@ -1076,7 +1053,7 @@ const HomeScreen = () => {
 
 
                         <TouchableOpacity
-                          onPress={() => handleDotsPress(executor.id)}
+                          onPress={() => handleYellowDotsPress(executor.id)}
                           style={{
                             zIndex: 100,
                             right: dimensions.width * 0.014,

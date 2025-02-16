@@ -1,3 +1,4 @@
+import { set } from 'date-fns';
 import React, { useEffect, useState, useMemo, useRef } from 'react';
 import {
   View,
@@ -5,69 +6,21 @@ import {
   TouchableOpacity,
   Image,
   Dimensions,
-  ScrollView,
-  Alert,
   SafeAreaView,
-  ImageBackground,
   Modal,
   TextInput,
 
 } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import ReactNativeHapticFeedback from "react-native-haptic-feedback";
-import { useNavigation } from '@react-navigation/native';
-import { set } from 'date-fns';
-
-const fontRobotoBold = 'Roboto-Bold';
-const fontRobotoReg = 'Roboto-Regular';
-const fontRobotoMonoBold = 'RobotoMono-Bold';
 const fontInterRegular = 'Inter18pt-Regular';
 
 const FocusingScreen = () => {
   const [dimensions, setDimensions] = useState(Dimensions.get('window'));
 
-  const [selectedTimerMode, setSelectedTimerMode] = useState('60 min');
-  const [isTimerRunning, setIsTimerRunning] = useState(false);
+  const [isThisTimerRunning, setIsThisTimerRunning] = useState(false);
   const [isTimerModalVisible, setIsTimerModalVisible] = useState(false);
   const [timeLeft, setTimeLeft] = useState('60:00');
-  const [isUpTimeChanged, setIsUpTimeChanged] = useState(false);
-  const [timersList, setTimersList] = useState([]);
-  const [currentTimer, setCurrentTimer] = useState(null);
-  const [editTimerTitle, setEditTimerTitle] = useState('');
-  const [isEditModalVisible, setIsEditModalVisible] = useState(false);
-
   const [inputTimerValue, setInputTimerValue] = useState('');
-
-
-  const [newTimerMinutes, setNewTimerMinutes] = useState('');
-
-  // const handleAddTimer = async () => {
-  //   const minutes = parseInt(newTimerMinutes, 10);
-  //   if ( isNaN(minutes) || minutes < 1 || minutes > 180) {
-  //     Alert.alert('Invalid input', 'Please enter a valid title and minutes (1-180).');
-  //     return;
-  //   }
-
-  //   const maxId = timersList.length > 0 ? Math.max(...timersList.map(timer => timer.id)) : 0;
-  //   const newTimer = { id: maxId + 1,  minutes };
-  //   const updatedTimers = [newTimer, ...timersList];
-  //   setTimersList(updatedTimers);
-  //   await AsyncStorage.setItem('timersList', JSON.stringify(updatedTimers));
-  //   setIsTimerModalVisible(false);
-  //   setIsTimerRunning(true);
-  //   setCurrentTimer(newTimer);
-  //   setTimeLeft(`${newTimer.minutes}:00`);
-  //   setNewTimerTitle('');
-  //   setNewTimerMinutes('');
-  // };
-
-  // const handleMinutesChange = (text) => {
-  //   if (/^\d*$/.test(text) && (text === '' || (parseInt(text, 10) >= 1 && parseInt(text, 10) <= 180))) {
-  //     setNewTimerMinutes(text);
-  //   }
-  // };
-
-
+  const [timerColor, setTimerColor] = useState('white');
 
   const handleMinutesChange = (value) => {
     if (/^\d*$/.test(value) && (value === '' || (parseInt(value, 10) >= 1 && parseInt(value, 10) < 100))) {
@@ -75,62 +28,45 @@ const FocusingScreen = () => {
     }
   };
 
-
-
-  useEffect(() => {
-    setIsUpTimeChanged(true);
-    console.log('isUpTimeChanged:', isUpTimeChanged);
-  }, [selectedTimerMode]);
-
-
   useEffect(() => {
     let interval;
-    if (isTimerRunning) {
+    if (isThisTimerRunning) {
       interval = setInterval(() => {
-        setTimeLeft(prevTime => {
-          const [minutes, seconds] = prevTime.split(':').map(Number);
+        setTimeLeft(prevTimerTime => {
+          const [minutes, seconds] = prevTimerTime.split(':').map(Number);
           const totalSeconds = minutes * 60 + seconds - 1;
+          if (totalSeconds <= 10) {
+            setTimerColor('#FF0000');
+          }
 
           if (totalSeconds <= 0) {
             clearInterval(interval);
-            setIsTimerRunning(false);
+            setIsThisTimerRunning(false);
             return '00:00';
           }
 
-          const newMinutes = Math.floor(totalSeconds / 60);
-          const newSeconds = totalSeconds % 60;
-          return `${String(newMinutes).padStart(2, '0')}:${String(newSeconds).padStart(2, '0')}`;
+          const newTimerMinutes = Math.floor(totalSeconds / 60);
+          const newTimerSeconds = totalSeconds % 60;
+          return `${String(newTimerMinutes).padStart(2, '0')}:${String(newTimerSeconds).padStart(2, '0')}`;
 
         });
       }, 1000);
     }
 
     return () => clearInterval(interval);
-  }, [isTimerRunning, timeLeft]);
-
-  const handleEditTimer = async () => {
-    const updatedTimers = timersList.map(timer => {
-      if (timer.id === currentTimer.id) {
-        return { ...timer, title: editTimerTitle };
-      }
-      return timer;
-    });
-    setTimersList(updatedTimers);
-    await AsyncStorage.setItem('timersList', JSON.stringify(updatedTimers));
-    setCurrentTimer(prevTimer => ({ ...prevTimer, title: editTimerTitle }));
-    setIsEditModalVisible(false);
-  };
+  }, [isThisTimerRunning, timeLeft]);
 
   const handleStartTimer = () => {
-    if(!isTimerRunning) {
+    setTimerColor('white');
+    if(!isThisTimerRunning) {
       setTimeLeft(`${inputTimerValue}:00`);
       setInputTimerValue('');
       setIsTimerModalVisible(true);
       setTimeout(() => {
         setIsTimerModalVisible(false);
-        setIsTimerRunning(true);
+        setIsThisTimerRunning(true);
       }, 4000);
-    } else setIsTimerRunning(false);
+    } else setIsThisTimerRunning(false);
   }
 
   return (
@@ -171,7 +107,7 @@ const FocusingScreen = () => {
               borderWidth: 4.6,
             }}>
 
-            {!isTimerRunning ? (
+            {!isThisTimerRunning ? (
               <Image
                 source={require('../assets/images/focusingImage.png')}
                 style={{
@@ -185,11 +121,11 @@ const FocusingScreen = () => {
             ) : (
               <Text
                 style={{
-                  fontFamily: fontRobotoMonoBold,
+                  fontFamily: fontInterRegular,
                   textAlign: "center",
                   fontSize: dimensions.width * 0.14,
                   fontWeight: 800,
-                  color: 'white',
+                  color: timerColor,
                   paddingBottom: 8,
 
                 }}
@@ -202,7 +138,7 @@ const FocusingScreen = () => {
 
 
 
-          {!isTimerRunning && (
+          {!isThisTimerRunning && (
             <>
               <Text style={{
                 fontFamily: fontInterRegular,
@@ -248,7 +184,7 @@ const FocusingScreen = () => {
 
         <TouchableOpacity
           onPress={handleStartTimer}
-          disabled={inputTimerValue === '' && !isTimerRunning}
+          disabled={inputTimerValue === '' && !isThisTimerRunning}
           style={{
             width: dimensions.width * 0.93,
             padding: dimensions.width * 0.04,
@@ -258,7 +194,7 @@ const FocusingScreen = () => {
             alignItems: 'center',
             alignSelf: 'center',
             marginTop: dimensions.height * 0.02,
-            opacity: inputTimerValue === '' && !isTimerRunning ? 0.5 : 1,
+            opacity: inputTimerValue === '' && !isThisTimerRunning ? 0.5 : 1,
             position: 'absolute',
             bottom: dimensions.height * 0.12,
 
@@ -273,7 +209,7 @@ const FocusingScreen = () => {
 
             }}
           >
-            {!isTimerRunning ? 'Run timer' : 'Stop timer'}
+            {!isThisTimerRunning ? 'Run timer' : 'Stop timer'}
           </Text>
         </TouchableOpacity>
       </View>
@@ -286,7 +222,6 @@ const FocusingScreen = () => {
         visible={isTimerModalVisible}
         transparent={true}
         animationType="fade"
-        onRequestClose={() => setIsEditModalVisible(false)}
       >
         <View style={{
           flex: 1,
@@ -312,7 +247,7 @@ const FocusingScreen = () => {
               />
               <Text style={{
                 paddingBottom: 5,
-                fontFamily: fontRobotoBold,
+                fontFamily: fontInterRegular,
                 fontWeight: 500,
                 textAlign: 'center',
                 fontSize: dimensions.width * 0.034,
