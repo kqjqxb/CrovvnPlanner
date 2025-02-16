@@ -31,8 +31,9 @@
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
 	</dict>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	
+<key>NSPhotoLibraryUsageDescription</key>
+<string>${PRODUCT_NAME} needs require to your photo library to select images for in-app fitures.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Inter18pt-Bold.ttf</string>
