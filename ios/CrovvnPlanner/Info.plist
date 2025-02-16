@@ -33,7 +33,11 @@
 	</dict>
 	
 <key>NSPhotoLibraryUsageDescription</key>
-<string>${PRODUCT_NAME} needs require to your photo library to select images for in-app fitures.</string>
+<string>${PRODUCT_NAME} we need your require to your photo library to select images for in-app fitures.</string>
+<key>NSCameraUsageDescription</key>
+<string>${PRODUCT_NAME} we need your require to the camera to capture photos for user profiles.</string>
+<key>NSMicrophoneUsageDescription</key>
+<string>${PRODUCT_NAME} we need your require to the microphone to record audio for in-app features.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Inter18pt-Bold.ttf</string>
