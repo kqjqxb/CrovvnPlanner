@@ -48,17 +48,11 @@ const AppNavigator = () => {
         const deviceId = await DeviceInfo.getUniqueId();
         const storageKey = `currentUser_${deviceId}`;
         const storedCopenhagenUser = await AsyncStorage.getItem(storageKey);
-        const isCopenOnboardingVisible = await AsyncStorage.getItem('isCopenOnboardingVisible');
+        
 
         if (storedCopenhagenUser) {
           setUser(JSON.parse(storedCopenhagenUser));
-          setIsOnboardWasVisible(false);
-        } else if (isCopenOnboardingVisible) {
-          setIsOnboardWasVisible(false);
-        } else {
-          setIsOnboardWasVisible(true);
-          await AsyncStorage.setItem('isCopenOnboardingVisible', 'true');
-        }
+        } 
       } catch (error) {
         console.error('Error loading of cur user', error);
       } finally {

@@ -26,7 +26,7 @@ const LaunshingScreen = () => {
     if (percentage < 100) {
       const timer = setTimeout(() => {
         setPercentage(percentage + 1);
-      }, 14.3);
+      }, 12);
       return () => clearTimeout(timer);
     }
   }, [percentage]);
