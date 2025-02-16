@@ -362,7 +362,8 @@ const SettingsScreen = ({ selectedScreen, }) => {
                     }}>
                         <TouchableOpacity
                             onPress={() => {
-                                setProfileEditingModalVisible(false);
+                                // setProfileEditingModalVisible(false);
+                                handleHereWasBack();
                             }}
                             style={{
                                 borderRadius: dimensions.width * 0.5,

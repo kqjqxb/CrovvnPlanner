@@ -80,7 +80,7 @@ const ProjectDetailsScreen = ({ setSelectedScreen, selectedProject }) => {
             }}>
                 <TouchableOpacity
                     onPress={() => {
-                        setSelectedScreen('Home');
+                        // setSelectedScreen('Home');
                     }}
                     style={{
                         borderRadius: dimensions.width * 0.5,
