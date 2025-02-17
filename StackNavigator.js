@@ -36,7 +36,7 @@ const AppNavigator = () => {
   const { user, setUser } = useContext(UserContext);
 
 
-  const [initializingCopenhagenApp, setInitializingCopenhagenApp] = useState(true);
+  const [initializingCrovvnApp, setInitializingCrovvnApp] = useState(true);
 
   useEffect(() => {
     dispatch(loadUserData());
@@ -47,22 +47,22 @@ const AppNavigator = () => {
       try {
         const deviceId = await DeviceInfo.getUniqueId();
         const storageKey = `currentUser_${deviceId}`;
-        const storedCopenhagenUser = await AsyncStorage.getItem(storageKey);
+        const storedCrovvnUser = await AsyncStorage.getItem(storageKey);
         
 
-        if (storedCopenhagenUser) {
-          setUser(JSON.parse(storedCopenhagenUser));
+        if (storedCrovvnUser) {
+          setUser(JSON.parse(storedCrovvnUser));
         } 
       } catch (error) {
         console.error('Error loading of cur user', error);
       } finally {
-        setInitializingCopenhagenApp(false);
+        setInitializingCrovvnApp(false);
       }
     };
     loadCopenhagenUser();
   }, [setUser]);
 
-  if (initializingCopenhagenApp) {
+  if (initializingCrovvnApp) {
     return (
       <View style={{
         backgroundColor: '#000000',
