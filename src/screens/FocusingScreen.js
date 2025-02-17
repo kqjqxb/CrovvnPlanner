@@ -183,10 +183,7 @@ const FocusingScreen = () => {
 
 
         <TouchableOpacity
-          // onPress={handleStartTimer}
-          onPress={() => {
-            handleFunc();
-          }}
+          onPress={handleStartTimer}
           disabled={inputTimerValue === '' && !isThisTimerRunning}
           style={{
             width: dimensions.width * 0.93,
