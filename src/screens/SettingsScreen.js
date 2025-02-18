@@ -578,9 +578,9 @@ const SettingsScreen = ({ selectedScreen, }) => {
                                 backgroundColor: '#DDB43F',
                                 borderRadius: dimensions.width * 0.025,
                                 paddingVertical: dimensions.height * 0.016,
-                                marginTop: dimensions.height * 0.03,
+                                marginTop: dimensions.height * 0.05,
                                 alignSelf: 'center',
-                                width: '95%',
+                                width: dimensions.width * 0.93,
                             }}
                         >
                             <Text
